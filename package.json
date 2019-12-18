@@ -1,31 +1,22 @@
 {
-  "name": "react-insta-clone",
+  "name": "dynamic-be",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "client-install": "npm install --prefix client",
     "start": "node server.js",
-    "server": "nodemon server.js",
-    "client": "npm start --prefix client",
-    "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "now-build": "mv build dist && npm install --prefix client && npm run build --prefix client"
+    "server": "nodemon server.js"
   },
   "repository": {
-    "type": "git",
-    "url": "git+https://github.com/john2796/React-insta-Clone.git"
+    "type": "git"
   },
   "keywords": [],
-  "author": "John Benedict Miranda",
+  "author": "dynamic-be",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/john2796/React-insta-Clone/issues"
-  },
-  "homepage": "https://github.com/john2796/React-insta-Clone#readme",
+  "bugs": {},
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.3",
-    "concurrently": "^4.1.0",
     "cors": "^2.8.5",
     "express": "^4.16.4",
     "is-empty": "^1.2.0",
