@@ -11,7 +11,7 @@ const validateLoginInput = require("../../validation/login")
 const User = require("../../models/User")
 const auth = passport.authenticate("jwt", { session: false })
 
-// @route   POST api/register
+// @route   POST api/account/signup
 // @desc    Register user
 // @access  Public
 server.post("/signup", (req, res) => {
@@ -47,7 +47,7 @@ server.post("/signup", (req, res) => {
   })
 })
 
-// @route   POST api/Login
+// @route   POST api/acount/signin
 // @desc    Login user
 // @access  Public
 server.post("/signin", (req, res) => {
@@ -67,7 +67,7 @@ server.post("/signin", (req, res) => {
           id: user.id,
           email: user.email
         }
-
+        req.user = user
         jwt.sign(
           payload,
           keys.secretOrKey,
@@ -77,8 +77,8 @@ server.post("/signin", (req, res) => {
           (err, token) => {
             res.json({
               success: true,
-              payload,
-              token
+              token: token
+              // token: "Bearer " + token // need to have space after bearer is important
             })
           }
         )
@@ -89,8 +89,12 @@ server.post("/signin", (req, res) => {
   })
 })
 
+//-----------------------------------------------------------
+// @route    /api/account/getUser
+// @desc     get user info
+// @Access   Private
+//-----------------------------------------------------------
 server.get("/getUser", auth, (req, res) => {
-  //res.json(req.user); all data or that
   res.json(req.user)
 })
 
