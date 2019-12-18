@@ -9,9 +9,8 @@ const app = express();
 const users = require("./routes/api/users");
 const insta = require("./routes/api/insta");
 
-//middleware
-app.use(cors());
-app.use(bodyParser.json());
+
+
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(logger());
 
