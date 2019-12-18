@@ -1,5 +1,5 @@
 const express = require("express")
-const router = express.Router()
+const server = express.Router()
 const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
 const keys = require("../../config/keys")
@@ -14,7 +14,7 @@ const auth = passport.authenticate("jwt", { session: false })
 // @route   POST api/register
 // @desc    Register user
 // @access  Public
-router.post("/register", (req, res) => {
+server.post("/signup", (req, res) => {
   const { errors, isValid } = validateRegisterInput(req.body)
   if (!isValid) {
     return res.status(400).json(errors)
@@ -50,7 +50,7 @@ router.post("/register", (req, res) => {
 // @route   POST api/Login
 // @desc    Login user
 // @access  Public
-router.post("/login", (req, res) => {
+server.post("/signin", (req, res) => {
   const { errors, isValid } = validateLoginInput(req.body)
   if (!isValid) {
     return res.status(400).send(errors)
@@ -89,9 +89,9 @@ router.post("/login", (req, res) => {
   })
 })
 
-server.get("/current", auth, (req, res) => {
+server.get("/getUser", auth, (req, res) => {
   //res.json(req.user); all data or that
   res.json(req.user)
 })
 
-module.exports = router
+module.exports = server
