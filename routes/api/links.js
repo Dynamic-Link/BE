@@ -41,6 +41,26 @@ server.post("/addLink", async (req, res) => {
   }
 })
 
-/// delete and update links
+//-----------------------------------------------------------
+// @route    /api/links/:id
+// @desc     delete a link
+// @Access   Private
+//-----------------------------------------------------------
+server.delete("/:id", (req, res) => {
+  const { id } = req.params
+  const { email } = req.user
+  User.findOne({ email }, (err, user) => {
+    if (err) res.status(401).json({ success: false })
+    const userLinks = user.links.filter(links => links._id !== id)
+    user.links = userLinks
+    profile.save().then(() => {
+      User.find({}, (err, user) => {
+        if (err) return res.status(401).json({ success: false })
+        res.json(user)
+      })
+    })
+  })
+})
 
+///  update links
 module.exports = server
