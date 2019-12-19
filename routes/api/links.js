@@ -54,9 +54,9 @@ server.delete("/:id", (req, res) => {
     const userLinks = user.links.filter(links => links._id !== id)
     user.links = userLinks
     profile.save().then(() => {
-      User.find({}, (err, posts) => {
+      User.find({}, (err, user) => {
         if (err) return res.status(401).json({ success: false })
-        res.json(posts)
+        res.json(user)
       })
     })
   })
