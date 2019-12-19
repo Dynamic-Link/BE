@@ -40,14 +40,12 @@ const auth = passport.authenticate("jwt", { session: false })
 server.use("/api/account", users)
 server.use("/api/links", auth, links)
 
-// Serve static assets if in production
-if (process.env.NODE_ENV === "production") {
-  // Set static folder
-  server.use(express.static("client/build"))
-  server.get("*", (req, res) => {
-    res.sendFile(path.resolve(__dirname, "client", "build", "index.html"))
-  })
-}
+// index route displays name
+server.get("/", (req, res) => {
+  res.send(
+    '<h1 style="color: red; text-align: center; font-size: 40px;">DYNAMIC LINK BE</h1>'
+  )
+})
 
 // 404
 server.use(function(req, res, next) {
