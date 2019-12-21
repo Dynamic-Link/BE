@@ -17,7 +17,6 @@ const generateToken = user => {
     })
   })
 }
-
 const authenticate = (req, res, next) => {
   const token = req.get("Authorization")
   if (token) {

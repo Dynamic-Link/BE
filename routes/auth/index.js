@@ -2,20 +2,17 @@ const server = require("express").Router()
 const bcrypt = require("bcryptjs")
 
 const { generateToken } = require("../../common/authentication")
-const validateRegister = require("../../validation/validateRegister")
+const validateRegister = require("../../validation/register")
+const validateLogin = require("../../validation/login")
 const db = require("../../common/helpers")
-//-----------------------------------------------------------
-// @route    /api/auth/register
-// @desc     Register user
+
+// @route    http://localhost:5000/api/auth/register
+// @desc     Register User
 // @Access   Public
-//-----------------------------------------------------------
 server.post("/register", async (req, res) => {
   let { password, email, firstName, lastName, isDeleted } = req.body
   const { message, isValid } = validateRegister(req.body)
-  if (!isValid) {
-    return res.status(400).json({ message })
-  }
-
+  if (!isValid) return res.status(400).json({ message })
   try {
     const exists = await db.findBy("users", { email })
     if (exists)
@@ -41,55 +38,27 @@ server.post("/register", async (req, res) => {
   }
 })
 
-// server.post("/login", async (req, res) => {
-//   const { username, password } = req.body
+server.post("/login", async (req, res) => {
+  const { email, password } = req.body
+  const { message, isValid } = validateLogin(req.body)
+  if (!isValid) return res.status(400).json({ message })
 
-//   if (!username) {
-//     res.status(400).json({ message: "no username provided" })
-//     return
-//   }
-
-//   if (!password) {
-//     res.status(400).json({ message: "no password provided" })
-//     return
-//   }
-
-//   try {
-//     const user = await db
-//       .select(
-//         "u.username",
-//         "u.password",
-//         "u.id",
-//         "u.firstname",
-//         "u.lastname",
-//         "i.url as image_url"
-//       )
-//       .from("users as u")
-//       .join("images as i", "u.image_id", "=", "i.id")
-//       .where("u.username", username)
-//       .first()
-
-//     if (user) {
-//       const correct = await bcrypt.compare(password, user.password)
-
-//       if (correct) {
-//         const token = await generateToken(user)
-
-//         res.status(200).json({
-//           user_id: user.id,
-//           username: user.username,
-//           image_url: user.image_url,
-//           firstname: user.firstname,
-//           lastname: user.lastname,
-//           token
-//         })
-//       }
-//     }
-
-//     res.status(401).json({ message: "Invalid credentials" })
-//   } catch (err) {
-//     res.status(500)
-//   }
-// })
+  try {
+    const user = await db.findBy("users", { email })
+    if (user) {
+      const correct = await bcrypt.compare(password, user.password)
+      if (correct) {
+        const token = await generateToken(user)
+        res.status(200).json({
+          ...user,
+          token
+        })
+      }
+    }
+    res.status(401).json({ message: "Invalid credentials" })
+  } catch ({ message }) {
+    res.status(500).json({ message })
+  }
+})
 
 module.exports = server
