@@ -9,6 +9,7 @@ exports.up = function(knex, Promise) {
       .notNullable()
     tbl.string("password").notNullable()
     tbl.boolean("isDeleted").defaultTo(false)
+    tbl.timestamps(true, true)
   })
 }
 

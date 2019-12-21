@@ -1,33 +1,95 @@
-const route = require("express").Router();
-const models = require("../../common/helpers");
-const errorHelper = require("../../error-helper/errorHelper");
+const server = require("express").Router()
+const bcrypt = require("bcryptjs")
 
+const { generateToken } = require("../../common/authentication")
+const validateRegister = require("../../validation/validateRegister")
+const db = require("../../common/helpers")
+//-----------------------------------------------------------
 // @route    /api/auth/register
-// @desc     POST signing up user
+// @desc     Register user
 // @Access   Public
-route.post("/register", async (req, res) => {
-  const { name, email, image_url, nickname, sub } = req.body;
-
-  if (!name || !email || !image_url || !nickname || !sub) {
-    return res.status(400).json({ message: "All fields are required" });
+//-----------------------------------------------------------
+server.post("/register", async (req, res) => {
+  let { password, email, firstName, lastName, isDeleted } = req.body
+  const { message, isValid } = validateRegister(req.body)
+  if (!isValid) {
+    return res.status(400).json({ message })
   }
 
   try {
-    const exists = await models.findBy("users", { email, sub });
-
-    if (exists) {
-      return res.status(200).json(exists);
-    }
-
-    const [id] = await models.add("users", req.body);
-
-    if (id) {
-      const user = await models.findBy("users", { id });
-      return res.status(200).json(user);
-    }
-  } catch (error) {
-    return errorHelper(500, error, res);
+    const exists = await db.findBy("users", { email })
+    if (exists)
+      return res
+        .status(400)
+        .json({ message: "User with that email already exists" })
+    password = await bcrypt.hash(password, 1)
+    await db.insert("users", {
+      password,
+      email,
+      firstName,
+      lastName,
+      isDeleted
+    })
+    const user = await db.findBy("users", { email })
+    const token = await generateToken(user)
+    res.status(201).json({
+      ...user,
+      token
+    })
+  } catch ({ message }) {
+    res.status(500).json({ message })
   }
-});
+})
 
-module.exports = route;
+// server.post("/login", async (req, res) => {
+//   const { username, password } = req.body
+
+//   if (!username) {
+//     res.status(400).json({ message: "no username provided" })
+//     return
+//   }
+
+//   if (!password) {
+//     res.status(400).json({ message: "no password provided" })
+//     return
+//   }
+
+//   try {
+//     const user = await db
+//       .select(
+//         "u.username",
+//         "u.password",
+//         "u.id",
+//         "u.firstname",
+//         "u.lastname",
+//         "i.url as image_url"
+//       )
+//       .from("users as u")
+//       .join("images as i", "u.image_id", "=", "i.id")
+//       .where("u.username", username)
+//       .first()
+
+//     if (user) {
+//       const correct = await bcrypt.compare(password, user.password)
+
+//       if (correct) {
+//         const token = await generateToken(user)
+
+//         res.status(200).json({
+//           user_id: user.id,
+//           username: user.username,
+//           image_url: user.image_url,
+//           firstname: user.firstname,
+//           lastname: user.lastname,
+//           token
+//         })
+//       }
+//     }
+
+//     res.status(401).json({ message: "Invalid credentials" })
+//   } catch (err) {
+//     res.status(500)
+//   }
+// })
+
+module.exports = server

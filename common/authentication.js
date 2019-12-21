@@ -1,34 +1,42 @@
-const jwt = require("jsonwebtoken");
-const jwtDecode = require("jwt-decode");
+const jwt = require("jsonwebtoken")
 
-const models = require("../common/helpers");
-const errorHelper = require("../error-helper/errorHelper");
+const jwtKey = process.env.JWT_SECRET || "a really secure key"
 
-// Authentication middleware
-const authenticate = async (req, res, next) => {
-  const token = req.get("Authorization");
-  try {
-    if (token) {
-      const decoded = jwtDecode(token);
-      const user = await models.findBy("users", {
-        email: decoded.email,
-        sub: decoded.sub
-      });
-
-      if (user) {
-        req.decoded = user;
-        next();
-      } else {
-        res.status(401).json({ message: "You are not authorized" });
-      }
-    } else {
-      res.status(401).json({ message: "You are not authorized" });
-    }
-  } catch (error) {
-    return errorHelper(500, error, res);
+const generateToken = user => {
+  const payload = {
+    subject: user.id,
+    user: user
   }
-};
+  const options = {
+    expiresIn: 60 * 60 * 24 * 30 // tokens last 30 days
+  }
+  return new Promise((res, rej) => {
+    jwt.sign(payload, jwtKey, options, (err, token) => {
+      if (err) rej(err)
+      else res(token)
+    })
+  })
+}
+
+const authenticate = (req, res, next) => {
+  const token = req.get("Authorization")
+  if (token) {
+    jwt.verify(token, jwtKey, (err, decoded) => {
+      if (err)
+        return res
+          .status(401)
+          .json({ message: "You are not authorized! Please log in." })
+      req.decoded = decoded
+      next()
+    })
+  } else {
+    res.status(401).json({
+      message: "You are not authorized! Please log in."
+    })
+  }
+}
 
 module.exports = {
+  generateToken,
   authenticate
-};
+}

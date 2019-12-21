@@ -9,7 +9,7 @@ const findBy = (tbl, filter) =>
 
 const findAllBy = (tbl, filter) => db(tbl).where(filter)
 
-const add = (tbl, item) =>
+const insert = (tbl, item) =>
   db(tbl)
     .insert(item)
     .returning("id")
@@ -17,11 +17,6 @@ const add = (tbl, item) =>
 const remove = (tbl, id) =>
   db(tbl)
     .where({ id })
-    .del()
-
-const removeAd = (tbl, filter) =>
-  db(tbl)
-    .where(filter)
     .del()
 
 const update = (tbl, id, item) =>
@@ -32,8 +27,8 @@ const update = (tbl, id, item) =>
 module.exports = {
   get,
   findBy,
-  add,
   remove,
-  removeAd,
-  update
+  update,
+  insert,
+  findAllBy
 }
