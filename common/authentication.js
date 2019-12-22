@@ -5,7 +5,7 @@ const jwtKey = process.env.JWT_SECRET || "a really secure key"
 const generateToken = user => {
   const payload = {
     subject: user.id,
-    user: user
+    user
   }
   const options = {
     expiresIn: 60 * 60 * 24 * 30 // tokens last 30 days
@@ -25,7 +25,7 @@ const authenticate = (req, res, next) => {
         return res
           .status(401)
           .json({ message: "You are not authorized! Please log in." })
-      req.decoded = decoded
+      req.decoded = decoded.user
       next()
     })
   } else {
