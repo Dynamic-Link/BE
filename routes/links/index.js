@@ -34,23 +34,15 @@ server.delete("/:id", async (req, res) => {
   const user_id = req.decoded.id
   try {
     const exists = await db.findBy("links", { id })
-    // check if link exists
     if (!exists) return res.status(404).json({ message: "Link not found" })
-
     if (exists.user_id !== user_id) {
       return res
         .status(403)
         .json({ message: "You cannot delete someone else link" })
     }
 
-    const removed = await db.remove("links", id)
-    if (removed) {
-      res.status(200).json({ message: "User successfully deleted." })
-    } else {
-      res
-        .status(404)
-        .json({ message: "There was an issue deleting the user at that ID." })
-    }
+    await db.remove("links", id)
+    res.json({ message: "Link successfully deleted." })
   } catch ({ message }) {
     res.status(500).json({ message })
   }
@@ -61,25 +53,17 @@ server.delete("/:id", async (req, res) => {
 // @Access   Private
 server.put("/:id", async (req, res) => {
   const { id } = req.params
-  const user_id = req.decoded.id
   try {
     const exists = await db.findBy("links", { id })
-    // check if link exists
-    if (!exists) return res.status(404).json({ message: "Link not found" })
-
-    if (exists.user_id !== user_id) {
-      return res
-        .status(403)
-        .json({ message: "You cannot edit someone else link" })
-    }
-
-    const updated = await db.update("links", id, { ...req.body })
-    if (updated) {
-      res.status(200).json({ message: "User successfully deleted." })
+    if (exists) {
+      if (req.decoded.id !== exists.user_id) {
+        res.status(400).json({ message: "You cannot edit someone elses link" })
+      } else {
+        await db.update("links", id, { ...req.body })
+        res.json({ message: "Successfully updated" })
+      }
     } else {
-      res
-        .status(404)
-        .json({ message: "There was an issue deleting the user at that ID." })
+      res.status(404).json({ message: "link not found" })
     }
   } catch ({ message }) {
     res.status(500).json({ message })
