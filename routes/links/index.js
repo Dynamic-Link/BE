@@ -2,12 +2,29 @@ const server = require("express").Router()
 const db = require("../../common/helpers")
 const validateLinks = require("../../validation/links")
 
+returnLinks = async (req, res) => {
+  try {
+    let users = await db.findAllBy("users", { id: req.decoded.id })
+    const results = users.map(async user => {
+      const links = await db.findAllBy("links", { user_id: user.id })
+      user.links = links
+      return user
+    })
+
+    Promise.all(results).then(completed => {
+      users = completed
+      res.json(users)
+    })
+  } catch ({ message }) {
+    res.status(500).json({ message })
+  }
+}
+
 // @route    http://localhost:5000/api/link
 // @desc     get all link
 // @Access   Private
 server.get("/", async (req, res) => {
-  const links = await db.get("links")
-  res.json(links)
+  returnLinks(req, res)
 })
 
 // @route    http://localhost:5000/api/links
@@ -22,12 +39,11 @@ server.post("/", async (req, res) => {
   try {
     const [id] = await db.insert("links", { ...req.body, user_id })
     if (id) {
-      const offer = await db.findBy("links", { id })
-      res.status(201).json(offer)
+      returnLinks(req, res)
     } else {
       res
         .status(404)
-        .json({ message: "There was an issue adding user at that ID." })
+        .json({ message: "There was an issue adding link at that ID." })
     }
   } catch ({ message }) {
     res.status(500).json({ message })
