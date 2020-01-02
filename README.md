@@ -11,7 +11,7 @@
 
 | Type | Endpoints          | Description               |
 | ---- | ------------------ | ------------------------- |
-| POST | /api/auth/register | Register User using Auth0 |
+| POST | /api/auth/register | Register User |
 | POST | /api/api/users     | Get User Info             |
 
 ### Authors
