@@ -12,6 +12,7 @@
 | Type | Endpoints          | Description               |
 | ---- | ------------------ | ------------------------- |
 | POST | /api/auth/register | Register User |
+| POST | /api/auth/login | Login User |
 | POST | /api/api/users     | Get User Info             |
 
 ### Authors
