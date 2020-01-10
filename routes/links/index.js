@@ -20,11 +20,33 @@ returnLinks = async (req, res) => {
   }
 }
 
-// @route    http://localhost:5000/api/link
+// @route    http://localhost:5000/api/links
 // @desc     get all link
 // @Access   Private
 server.get("/", async (req, res) => {
   returnLinks(req, res)
+})
+
+// @route    http://localhost:5000/api/links/:id
+// @desc     Get single link by id
+// @Access   Private
+server.get("/:id", async (req, res) => {
+  const { id } = req.params
+  if (!id) {
+    return res
+      .status(400)
+      .json({ message: "Please make sure you are passing params id" })
+  }
+  try {
+    const link = await db.findBy("links", { id })
+    if (link) {
+      res.status(200).json(link)
+    } else {
+      res.status(404).json({ message: "link not found" })
+    }
+  } catch ({ message }) {
+    res.status(500).json({ message })
+  }
 })
 
 // @route    http://localhost:5000/api/links
@@ -65,14 +87,12 @@ server.delete("/:id", async (req, res) => {
         .status(403)
         .json({ message: "You cannot delete someone else link" })
     }
-
     await db.remove("links", id)
     res.json({ message: "Link successfully deleted." })
   } catch ({ message }) {
     res.status(500).json({ message })
   }
 })
-
 // @route    http://localhost:5000/api/:id
 // @desc     Update
 // @Access   Private
@@ -88,12 +108,10 @@ server.put("/:id", async (req, res) => {
         .status(403)
         .json({ message: "You cannot delete someone else link" })
     }
-
     await db.update("links", id, { ...req.body })
     res.json({ message: "Link successfully updated." })
   } catch ({ message }) {
     res.status(500).json({ message })
   }
 })
-
 module.exports = server
