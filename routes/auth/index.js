@@ -9,7 +9,7 @@ const db = require("../../common/helpers")
 // @route    http://localhost:5000/api/auth/register
 // @desc     Register User
 // @Access   Public
-server.post("/register", async (req, res) => {
+server.post("/signup", async (req, res) => {
   let { password, email, firstName, lastName, isDeleted } = req.body
   const { message, isValid } = validateRegister(req.body)
   if (!isValid) return res.status(400).json({ message })
@@ -38,7 +38,7 @@ server.post("/register", async (req, res) => {
   }
 })
 
-server.post("/login", async (req, res) => {
+server.post("/signin", async (req, res) => {
   const { email, password } = req.body
   const { message, isValid } = validateLogin(req.body)
   if (!isValid) return res.status(400).json({ message })
