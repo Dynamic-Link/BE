@@ -27,6 +27,28 @@ server.get("/", async (req, res) => {
   returnLinks(req, res)
 })
 
+// @route    http://localhost:5000/api/links/:id
+// @desc     Get single link by id
+// @Access   Private
+server.get("/:id", async (req, res) => {
+  const { id } = req.params
+  if (!id) {
+    return res
+      .status(400)
+      .json({ message: "Please make sure you are passing params id" })
+  }
+  try {
+    const link = await db.findBy("links", { id })
+    if (link) {
+      res.status(200).json(link)
+    } else {
+      res.status(404).json({ message: "link not found" })
+    }
+  } catch ({ message }) {
+    res.status(500).json({ message })
+  }
+})
+
 // @route    http://localhost:5000/api/links
 // @desc    Post a new Link
 // @Access   Private
