@@ -1,6 +1,6 @@
 # 🔥 Dynamic-Link-BE 🔥
 
-##### Backend URL : https://https://dynamic-link.herokuapp.com/
+##### Backend URL : https://dynamic-link.herokuapp.com/
 
 ## Table of Contents
 
@@ -8,6 +8,7 @@
   - [User](#user)
 
 ### Summary Table of API Endpoints
+
 
 | Type   | Endpoints           | Description           |
 | ------ | ------------------- | --------------------- |
@@ -19,6 +20,7 @@
 | POST   | /api/links          | Add New Link          |
 | DELETE | /api/links/:id      | Remove a Link         |
 | PUT    | /api/links/:id      | Update a Link         |
+
 
 ### Authors
 - John Benedict Miranda [Github](https://github.com/john2796) , [linkedin](https://www.linkedin.com/in/john-benedict-miranda-7b2357180/)
