@@ -6,7 +6,7 @@ const validateRegister = require("../../validation/register")
 const validateLogin = require("../../validation/login")
 const db = require("../../common/helpers")
 
-// @route    http://localhost:5000/api/auth/register
+// @route    http://localhost:5000/api/account/signup
 // @desc     Register User
 // @Access   Public
 server.post("/signup", async (req, res) => {
@@ -38,6 +38,9 @@ server.post("/signup", async (req, res) => {
   }
 })
 
+// @route    http://localhost:5000/api/account/signin
+// @desc     Signin user
+// @Access   Public
 server.post("/signin", async (req, res) => {
   const { email, password } = req.body
   const { message, isValid } = validateLogin(req.body)
@@ -49,13 +52,14 @@ server.post("/signin", async (req, res) => {
       const correct = await bcrypt.compare(password, user.password)
       if (correct) {
         const token = await generateToken(user)
-        res.status(200).json({
+        res.json({
           ...user,
           token
         })
       }
+    } else {
+      res.status(401).json({ message: "Invalid credentials" })
     }
-    res.status(401).json({ message: "Invalid credentials" })
   } catch ({ message }) {
     res.status(500).json({ message })
   }

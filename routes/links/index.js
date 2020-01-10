@@ -20,7 +20,7 @@ returnLinks = async (req, res) => {
   }
 }
 
-// @route    http://localhost:5000/api/link
+// @route    http://localhost:5000/api/links
 // @desc     get all link
 // @Access   Private
 server.get("/", async (req, res) => {
@@ -65,14 +65,12 @@ server.delete("/:id", async (req, res) => {
         .status(403)
         .json({ message: "You cannot delete someone else link" })
     }
-
     await db.remove("links", id)
     res.json({ message: "Link successfully deleted." })
   } catch ({ message }) {
     res.status(500).json({ message })
   }
 })
-
 // @route    http://localhost:5000/api/:id
 // @desc     Update
 // @Access   Private
@@ -88,12 +86,10 @@ server.put("/:id", async (req, res) => {
         .status(403)
         .json({ message: "You cannot delete someone else link" })
     }
-
     await db.update("links", id, { ...req.body })
     res.json({ message: "Link successfully updated." })
   } catch ({ message }) {
     res.status(500).json({ message })
   }
 })
-
 module.exports = server
