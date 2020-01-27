@@ -1,11 +1,12 @@
-# 🔥 Dynamic-Link-BE 🔥
+****# 🔥 Dynamic-Link-BE 🔥
 
 ##### Backend URL : https://dynamic-link.herokuapp.com/
 
 ## Table of Contents
 
-- [Summary Table of API Endpoints](#summary-table-of-api-endpoints)
-  - [User](#user)
+- [Table of Contents](#table-of-contents)
+  - [Summary Table of API Endpoints](#summary-table-of-api-endpoints)
+  - [Authors](#authors)
 
 ### Summary Table of API Endpoints
 
@@ -15,6 +16,7 @@
 | POST   | /api/account/signup | Signup New User       |
 | POST   | /api/account/signin | Signin User           |
 | GET    | /api/user           | Get Current User      |
+| PUT    | /api/user           | Update User           |
 | GET    | /api/links          | Get links             |
 | GET    | /api/links/:id      | Get Single Link by id |
 | POST   | /api/links          | Add New Link          |
