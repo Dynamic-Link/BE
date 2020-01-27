@@ -11,17 +11,18 @@
 ### Summary Table of API Endpoints
 
 
-| Type   | Endpoints           | Description           |
-| ------ | ------------------- | --------------------- |
-| POST   | /api/account/signup | Signup New User       |
-| POST   | /api/account/signin | Signin User           |
-| GET    | /api/user           | Get Current User      |
-| PUT    | /api/user           | Update User           |
-| GET    | /api/links          | Get links             |
-| GET    | /api/links/:id      | Get Single Link by id |
-| POST   | /api/links          | Add New Link          |
-| DELETE | /api/links/:id      | Remove a Link         |
-| PUT    | /api/links/:id      | Update a Link         |
+| Type   | Endpoints              | Description           |
+| ------ | ---------------------- | --------------------- |
+| POST   | /api/account/signup    | Signup New User       |
+| POST   | /api/account/signin    | Signin User           |
+| GET    | /api/user              | Get Current User      |
+| PUT    | /api/user              | Update User Info      |
+| PUT    | /api/user/updateAvatar | Update User avatar    |
+| GET    | /api/links             | Get links             |
+| GET    | /api/links/:id         | Get Single Link by id |
+| POST   | /api/links             | Add New Link          |
+| DELETE | /api/links/:id         | Remove a Link         |
+| PUT    | /api/links/:id         | Update a Link         |
 
 
 ### Authors
